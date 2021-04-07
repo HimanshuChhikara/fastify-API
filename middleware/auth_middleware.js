@@ -11,4 +11,4 @@ module.exports = fastifyPlugin(async (fastify)=>{
             res.send(err)
         }
     })
-})
+}) 

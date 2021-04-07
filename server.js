@@ -12,16 +12,19 @@ fastify.listen(3000, function (err, address) {
 })
 //JWT
 fastify.register(require('fastify-jwt',{
-  secret: process.env.JWT_SECRET,
+  secret: "test@#1234",
 
 }))
 //DB Connection
 
-mongoose.connect('mongodb://localhost/')
+mongoose.connect('mongodb://localhost/',{useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.log(err))
 
 fastify.register(Router);
+
+fastify.register(require('./middleware/auth_middleware'));
+fastify.register(require('./router/authRouter'))
 
 fastify.register(
   require('./router/router'),

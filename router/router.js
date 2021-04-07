@@ -2,7 +2,8 @@
 
 async function Router(fastify){
   fastify.get('/users',async (req,res) => {
-    res.status(200).send({Hello:"Sucess"})
+    preValidatation: [ fastify.jwtauthentication]
+    res.status(200).send({message:"Sucessfully Authorized"})
   })
 }
 

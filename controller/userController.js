@@ -1,9 +1,12 @@
-const boom = require('boom');
-const User = require('../models/users');
 
-exports.getCars = async (req,res) => {
-    try{
-        const car
-    }
+const Users = require('../models/users');
+
+exports.addUser = async (req,res) => {
+  try{
+    const users = new Users(req.body)
+    return users.save()
+  }
+  catch(err){
+    console.error(err);
+  }
 }
-

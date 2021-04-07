@@ -1,10 +1,9 @@
-const { send } = require("process")
+
 
 async function Router(fastify){
-
-    fastify.get('/demo', async (req,res) => {
-        res.status(200).send({Hello:"Himanshu"})
-    })
+  fastify.get('/users',async (req,res) => {
+    res.status(200).send({Hello:"Sucess"})
+  })
 }
 
-module.exports = Router;
+module.exports = Router

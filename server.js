@@ -10,7 +10,11 @@ fastify.listen(3000, function (err, address) {
     }
     fastify.log.info(`server listening on ${address}`)
 })
+//JWT
+fastify.register(require('fastify-jwt',{
+  secret: process.env.JWT_SECRET,
 
+}))
 //DB Connection
 
 mongoose.connect('mongodb://localhost/')
@@ -18,6 +22,10 @@ mongoose.connect('mongodb://localhost/')
   .catch(err => console.log(err))
 
 fastify.register(Router);
+
+fastify.register(
+  require('./router/router'),
+)
   
 fastify.get('/user', async (request, response) => {
     response.status(200).send({helo:"heelo there"})

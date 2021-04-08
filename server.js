@@ -1,37 +1,32 @@
 const mongoose = require('mongoose')
-const Router = require('./router/router')
+const routes = require('./router/router')
 const fastify = require('fastify')({
-    logger: true
-  })
-fastify.listen(3000, function (err, address) {
-    if (err) {
-      fastify.log.error(err)
-      process.exit(1)
-    }
-    fastify.log.info(`server listening on ${address}`)
+  logger: true
 })
-//JWT
-fastify.register(require('fastify-jwt',{
-  secret: "test@#1234",
 
-}))
-//DB Connection
+// Declare a route
+fastify.get('/', async (request, reply) => {
+  return { hello: 'world' }
+}),
 
-mongoose.connect('mongodb://localhost/',{useNewUrlParser: true, useUnifiedTopology: true})
-  .then(() => console.log('MongoDB connected...'))
-  .catch(err => console.log(err))
+routes.forEach((route, index) => {
+  fastify.route(route)
+}),
 
-fastify.register(Router);
 
-fastify.register(require('./middleware/auth_middleware'));
-fastify.register(require('./router/authRouter'))
+// Connect to DB
+mongoose.connect('mongodb://localhost:27017/task',{ useUnifiedTopology: true,useNewUrlParser: true })
+ .then(() => console.log("MongoDB connected…"))
+ .catch(err => console.log(err))
 
-fastify.register(
-  require('./router/router'),
-)
-  
-fastify.get('/user', async (request, response) => {
-    response.status(200).send({helo:"heelo there"})
-  })
-  
-  
+// Run the server!
+const start = async () => {
+  try {
+    await fastify.listen(3000)
+    fastify.log.info(`server listening on ${fastify.server.address().port}`)
+  } catch (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+}
+start()

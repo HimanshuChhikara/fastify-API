@@ -1,58 +1,45 @@
-const boom = require('boom');
-const Users = require('../models/users');
+const User = require('../models/users');
+const boom = require('boom')
 
-//User JWT
-exports.validateUser = async function authUser(fastify){
-  fastify.post('/users/v1/generateAccessToken',async (req,res) => {
-      try{
-          const {name,email,secret} = req.body
-          if(!name || !email){
-              res.status(400).send({error: true,msg:"Name and Email are Mandatory"});
-              return
-          }
-          //DB Check 
-          // let userData = await db.Users.find({})
-
-          const token = fastify.jwt.sign({name,email,secret}, {expiresIn: 86400})
-          res.status(200).send({token,email})  
-      }
-      catch(err){
-          throw boom.boomify(err)
-      }
-      
-  })
-},
-
-//add User
-exports.addUser = async (req,res) => {
+exports.getUser = async (req,res) => {
   try{
-    const users = new Users(req.body)
-    return users.save()
+    const user = await User.find()
+    res.status(200).send({message:"Sucess",user:user})
   }
   catch(err){
-    console.error(err);
-  }
-},
-
-//Update User
-exports.updateUser = async (req, reply) => {
-  try {
-    const id = req.params.id
-    const Users = req.body
-    const { ...updateData } = users
-    const update = await Users.findByIdAndUpdate(id, updateData, { new: true })
-    return update
-  } catch (err) {
     throw boom.boomify(err)
   }
 },
 
-//Delete User
+exports.addUser = async (req,res) => {
+  try{
+    const user = new User(req.body)
+    return user.save()
+    res.status(200).send({message:"Success",user:user})
+  }
+  catch(err){
+    throw boom.boomify(err)
+  }
+},
+
+exports.updateUser = async (req,res) => {
+  try{
+  const id = req.params.id
+  const user = req.body
+  const { ...updateData } = user
+  const update = await User.findByIdAndUpdate(id, updateData, { new: true })
+  return update
+  }
+   catch (err) {
+    throw boom.boomify(err)
+  }
+},
+
 exports.deleteUser = async (req, reply) => {
   try {
     const id = req.params.id
-    const users = await Users.findByIdAndRemove(id)
-    return users
+    const user = await User.findByIdAndRemove(id)
+    return user
   } catch (err) {
     throw boom.boomify(err)
   }

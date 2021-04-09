@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const routes = require('./router/router')
+const jwt = require('fastify-jwt')
 const fastify = require('fastify')({
   logger: true
 })
@@ -12,7 +13,14 @@ fastify.get('/', async (request, reply) => {
 routes.forEach((route, index) => {
   fastify.route(route)
 }),
+// JWT 
+fastify.register(JWT, Object.assign(
+  {},
+  { secret: process.env.JWT_SECRET },
+  opts.auth
+))
 
+fastify.register(require('./middleware/auth_middleware'));
 
 // Connect to DB
 mongoose.connect('mongodb://localhost:27017/task',{ useUnifiedTopology: true,useNewUrlParser: true })

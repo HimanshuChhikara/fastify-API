@@ -8,7 +8,11 @@ const routes = [
     url : '/getUser',
     handler: userController.getUser
   },
-  
+  {
+    method : 'POST',
+    url : '/addUser/V1',
+    handler: userController.addUser/V1/generateAccessToken
+  }, 
   {
     method : 'POST',
     url : '/addUser',
